@@ -6,7 +6,7 @@ export const search_handler = (req, res, next) => {
   const {
     query: { type },
   } = req;
-  const {
+  let {
     body: { prompt, custom },
   } = req;
 
