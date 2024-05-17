@@ -1,4 +1,4 @@
-import { chromium, errors } from "playwright";
+import { chromium } from "playwright";
 
 export const startBrowser = async () => {
   try {

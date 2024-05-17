@@ -11,8 +11,11 @@ router.get("/search", search_handler, async (req, res) => {
 
     const page = await browser.newPage();
     await page.goto("http://www.chatgpt.com");
-    await page.locator("[id=prompt-textarea]").fill(prompt);
-    await page.press("[id=prompt-textarea]", "Enter");
+    const text_area = await page.getByRole("textbox", {
+      name: "Message ChatGPT",
+    });
+    await text_area.fill(prompt);
+    await text_area.press("Enter");
 
     await expect(
       page.locator("[data-testid=conversation-turn-3]")
