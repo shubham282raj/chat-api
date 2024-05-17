@@ -1,10 +1,8 @@
-import { chromium } from "playwright";
+import puppeteer from "puppeteer";
 
 export const startBrowser = async () => {
   try {
-    const browser = await chromium.launch({
-      headless: process.env.NODE_ENV == "production",
-    });
+    const browser = await puppeteer.launch({ headless: false });
     console.log("Browser started successfully");
     return browser;
   } catch (error) {
