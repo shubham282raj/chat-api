@@ -2,7 +2,9 @@ import puppeteer from "puppeteer";
 
 export const startBrowser = async () => {
   try {
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({
+      headless: process.env.NODE_ENV === "production",
+    });
     console.log("Browser started successfully");
     return browser;
   } catch (error) {
