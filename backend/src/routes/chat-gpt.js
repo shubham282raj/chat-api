@@ -4,7 +4,7 @@ import { browser } from "../index.js";
 
 const router = Router();
 
-router.get("/search", search_handler, async (req, res) => {
+router.post("/search", search_handler, async (req, res) => {
   try {
     const prompt = req.body.prompt;
 
