@@ -1,21 +1,38 @@
 import { Router } from "express";
-import { search_handler } from "../middleware/search-handler.js";
+import {
+  bing_search_type_handler,
+  search_handler,
+} from "../middleware/search-handler.js";
 import { browser } from "../index.js";
 
 const router = Router();
 
 router.post("/search", search_handler, async (req, res) => {
   try {
-    const prompt = req.body.prompt;
+    const prompts = bing_search_type_handler(req);
 
     const page = await browser.newPage();
     await page.goto("http://bing.com/chat");
-    const text_area = await page.waitForSelector("div >>> textarea");
-    await text_area.type(prompt);
-    await page.keyboard.press("Enter");
 
-    await page.waitForSelector("div >>> #stop-responding-button");
-    await page.waitForSelector("div >>> #stop-responding-button:disabled");
+    for (let i = 0; i < prompts.length; i++) {
+      await page.waitForSelector("div >>> textarea");
+      const text_area = await page.$("div >>> textarea");
+      await text_area.type(prompts[i]);
+      await page.keyboard.press("Enter");
+
+      await page.waitForSelector("div >>> #stop-responding-button");
+      await page.waitForSelector("div >>> #stop-responding-button:disabled");
+
+      if (i == 0) {
+        try {
+          const continue_btn = await page.waitForSelector(
+            "div >>> .get-started-btn",
+            { timeout: 300 }
+          );
+          await continue_btn.click();
+        } catch {}
+      }
+    }
 
     let response = await page.waitForSelector("div >>> .ac-textBlock");
     response = await page.$$("div >>> .ac-textBlock");

@@ -11,7 +11,7 @@ export const search_handler = (req, res, next) => {
   } = req;
 
   if (custom) {
-    prompt = prompt + ". " + custom;
+    prompt = custom.pre + ". " + prompt + ". " + custom.post;
   }
 
   switch (type) {
@@ -33,4 +33,31 @@ export const search_handler = (req, res, next) => {
 
   req.body.prompt = prompt;
   next();
+};
+
+export const bing_search_type_handler = (req) => {
+  const {
+    body: { prompt, custom },
+  } = req;
+  const {
+    query: { type },
+  } = req;
+
+  const prompts = [prompt];
+
+  switch (type) {
+    case "short":
+      prompts.push("Summarize your answer.");
+      break;
+    case "very-short":
+      prompts.push("Summarize your answer in 10 to 15 words.");
+      break;
+    case "one-word":
+      prompts.push("Summarize your answer in 1 or 2 words.");
+      break;
+    default:
+      break;
+  }
+
+  return prompts;
 };
