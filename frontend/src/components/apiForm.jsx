@@ -1,16 +1,27 @@
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
+import * as apiClient from "../api-client";
 
 const ApiForm = () => {
   const { register, handleSubmit } = useForm();
 
+  const mutation = useMutation(apiClient.search_chat, {
+    onSuccess: (message) => {
+      console.log(message);
+    },
+    onError: (error) => {
+      console.log(error.message);
+    },
+  });
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    mutation.mutate(data);
   });
 
   return (
     <>
       <form
-        className="flex flex-col items-center gap-5 my-5 w-3/4 border border-white"
+        className="flex flex-col items-center p-5 gap-5 my-5 w-3/4 border border-white"
         onSubmit={onSubmit}
       >
         <h2 className="text-3xl font-bold">Check API</h2>
@@ -20,19 +31,19 @@ const ApiForm = () => {
             <label className="inline-flex items-center">
               <input
                 type="radio"
-                value="chat-gpt"
+                value="bing-chat"
                 {...register("searchEngine")}
                 checked
               ></input>
-              <span className="mx-3 my-2 text-xl">Chat GPT</span>
+              <span className="mx-3 my-2 text-xl">Bing Chat</span>
             </label>
             <label className="inline-flex items-center">
               <input
                 type="radio"
-                value="bing-chat"
+                value="chat-gpt"
                 {...register("searchEngine")}
               ></input>
-              <span className="mx-3 my-2 text-xl">Bing Chat</span>
+              <span className="mx-3 my-2 text-xl">Chat GPT</span>
             </label>
           </div>
         </div>
