@@ -1,21 +1,26 @@
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import * as apiClient from "../api-client";
+import { useState } from "react";
 
 const ApiForm = () => {
+  const [responseMsg, setResponseMsg] = useState(null);
   const { register, handleSubmit } = useForm();
 
   const mutation = useMutation(apiClient.search_chat, {
     onSuccess: (message) => {
       console.log(message);
+      setResponseMsg(String(message));
     },
     onError: (error) => {
       console.log(error.message);
+      setResponseMsg(String(error.message));
     },
   });
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
+    setResponseMsg(null);
     mutation.mutate(data);
   });
 
@@ -34,7 +39,6 @@ const ApiForm = () => {
                 type="radio"
                 value="bing-chat"
                 {...register("searchEngine")}
-                checked
               ></input>
               <span className="mx-3 my-2 text-xl">Bing Chat</span>
             </label>
@@ -56,7 +60,6 @@ const ApiForm = () => {
                 type="radio"
                 value="default"
                 {...register("searchType")}
-                checked
               ></input>
               <span className="mx-3 my-2 text-xl">Default</span>
             </label>
@@ -109,6 +112,12 @@ const ApiForm = () => {
             {...register("prompt")}
           />
         </label>
+        {responseMsg && (
+          <div className="flex flex-col w-1/2">
+            <span className="text-2xl text-yellow-200">Response</span>
+            <span className="text-xl text-yellow-200">{responseMsg}</span>
+          </div>
+        )}
         <span>
           <button
             type="submit"
