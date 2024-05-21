@@ -3,6 +3,7 @@ import routes from "./routes/index.js";
 import cors from "cors";
 import { startBrowser } from "./utils/browser.js";
 import { request_logger } from "./middleware/request-logger.js";
+import path from "path";
 
 export const browser = await startBrowser();
 
@@ -15,6 +16,10 @@ app.use(
     origin: "http://localhost:5173",
   })
 );
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+
 app.use(request_logger);
 
 app.use("/api", routes);
