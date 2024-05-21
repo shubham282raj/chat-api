@@ -4,6 +4,7 @@ import {
   search_handler,
 } from "../middleware/search-handler.js";
 import { browser } from "../index.js";
+import { wait_for_timeout } from "../utils/puppeteer_utils.js";
 
 const router = Router();
 
@@ -21,13 +22,14 @@ router.post("/search", search_handler, async (req, res) => {
       await page.keyboard.press("Enter");
 
       await page.waitForSelector("div >>> #stop-responding-button");
+      await wait_for_timeout(1000);
       await page.waitForSelector("div >>> #stop-responding-button:disabled");
 
       if (i == 0) {
         try {
           const continue_btn = await page.waitForSelector(
             "div >>> .get-started-btn",
-            { timeout: 300 }
+            { timeout: 500 }
           );
           await continue_btn.click();
         } catch {}

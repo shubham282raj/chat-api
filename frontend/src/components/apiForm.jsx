@@ -15,6 +15,7 @@ const ApiForm = () => {
   });
 
   const onSubmit = handleSubmit((data) => {
+    console.log(data);
     mutation.mutate(data);
   });
 
